@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { serverEnv } from '../utils';
 
 
 /**
@@ -14,7 +15,7 @@ const mongooConnection = {
 
 export const connect = async()=>{
     if(mongooConnection.isConnected){
-        console.log('Ya estamos conectados')
+        console.log('Ya estabamos conectados')
         return;
     }
 
@@ -27,14 +28,14 @@ export const connect = async()=>{
 
         await mongoose.disconnect();
     }
-
-    await mongoose.connect('...');
+    
+    await mongoose.connect(serverEnv.MONGO_URL);
     mongooConnection.isConnected = 1;
-    console.log('Conectado a MongoDB', '....')
+    console.log('Conectado a MongoDB', serverEnv.MONGO_URL)
 }
 
 export const disconnect = async ()=>{
-    if(mongooConnection.isConnected !== 0) return;
+    if(mongooConnection.isConnected === 0) return;
     await mongoose.disconnect();
     console.log('Desconectado de MongoDB')
     
