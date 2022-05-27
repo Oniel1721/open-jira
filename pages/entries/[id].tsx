@@ -1,18 +1,29 @@
+
+import { GetServerSideProps } from 'next'
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, TextField } from "@mui/material"
 import { Layout } from "../../components/layouts"
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { EntryStatus, validEntryStatus } from "../../interfaces";
-import { ChangeEvent, useMemo, useState } from "react";
+import { Entry, EntryStatus, FC, validEntryStatus } from "../../interfaces";
+import { ChangeEvent, useContext, useMemo, useState } from "react";
+import { isValidObjectId } from 'mongoose'
+import { dbEntries } from '../../database';
+import { EntriesContext } from '../../context/entries';
+import { useRouter } from 'next/router';
+
+interface Props {
+    entry: Entry
+}
 
 
-
-
-const EntryPage = () => {
-
-    const [inputValue, setInputValue] = useState('')
-    const [status, setStatus] = useState<EntryStatus>(EntryStatus.PENDING)
+const EntryPage:FC<Props> = ({ entry }) => {
+    const [inputValue, setInputValue] = useState(entry.description)
+    const [status, setStatus] = useState<EntryStatus>(entry.status)
     const [touched, setTouched] = useState(false)
+
+    const router = useRouter()
+
+    const { updateEntry } = useContext(EntriesContext)
 
     const onInputValueChanged = (event: ChangeEvent<HTMLInputElement>)=>{
         setInputValue(event.target.value)
@@ -23,7 +34,13 @@ const EntryPage = () => {
     }
 
     const onSave = ()=>{
-        
+        if(inputValue.trim().length === 0) return;
+        updateEntry({
+            ...entry,
+            description: inputValue,
+            status
+        }, true)
+        router.push('/')
     }
 
     const isNotValid = useMemo(()=> inputValue.length <=0 && touched, [inputValue, touched])
@@ -111,6 +128,29 @@ const EntryPage = () => {
         </IconButton>
     </Layout>
   )
+}
+
+
+
+export const getServerSideProps: GetServerSideProps = async ({params}) => {
+    const {id} = params as {id: string};
+    const redirectToIndex = {
+        redirect: {
+            destination: '/',
+            permanent: false
+        }
+    }
+
+    const entry = await dbEntries.getEntryById(id)
+    if(!entry) return redirectToIndex;
+
+   
+    
+    return {
+        props: {
+            entry
+        }
+    }
 }
 
 export default EntryPage
