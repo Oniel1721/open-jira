@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import mongoose from 'mongoose'
-import { db } from '../../../database'
-import { IEntry, Entry } from '../../../models'
+import { db } from '../../../../database'
+import { IEntry, Entry } from '../../../../models'
 
 type Data = 
     | { message: string }
