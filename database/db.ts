@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { serverEnv } from '../utils';
+import { isDevelopmentMode, serverEnv } from '../utils';
 
 
 /**
@@ -35,8 +35,8 @@ export const connect = async()=>{
 }
 
 export const disconnect = async ()=>{
+    if(isDevelopmentMode()) return;
     if(mongooConnection.isConnected === 0) return;
     await mongoose.disconnect();
-    console.log('Desconectado de MongoDB')
-    
+    console.log('Desconectado de MongoDB')   
 }
