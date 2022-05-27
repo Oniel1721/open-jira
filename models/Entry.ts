@@ -15,7 +15,7 @@ const entrySchema = new Schema({
                 EntryStatus.IN_PROGRESS, 
                 EntryStatus.PENDING
             ],
-            message: '{Value} no es un estado permitido'
+            message: ' no es un estado permitido'
         },
         default: EntryStatus.PENDING,
     },
