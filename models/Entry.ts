@@ -1,5 +1,5 @@
 import  mongoose, { Model, Schema } from 'mongoose'
-import { Entry, EntryStatus } from '../interfaces';
+import { Entry, EntryStatus, validEntryStatus } from '../interfaces';
 
 
 export interface IEntry extends Entry{}
@@ -10,11 +10,7 @@ const entrySchema = new Schema({
     status: {
         type: String,
         enum: {
-            values: [
-                EntryStatus.FINISHED, 
-                EntryStatus.IN_PROGRESS, 
-                EntryStatus.PENDING
-            ],
+            values: validEntryStatus,
             message: ' no es un estado permitido'
         },
         default: EntryStatus.PENDING,

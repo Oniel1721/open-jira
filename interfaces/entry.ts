@@ -5,6 +5,12 @@ export enum EntryStatus {
     FINISHED = 'FINISHED'
 }
 
+export const validEntryStatus:EntryStatus[] = [
+    EntryStatus.FINISHED, 
+    EntryStatus.IN_PROGRESS, 
+    EntryStatus.PENDING
+]
+
 
 export interface Entry {
     _id: string;
