@@ -10,6 +10,7 @@ import { isValidObjectId } from 'mongoose'
 import { dbEntries } from '../../database';
 import { EntriesContext } from '../../context/entries';
 import { useRouter } from 'next/router';
+import { dateFunctions } from '../../utils';
 
 interface Props {
     entry: Entry
@@ -59,7 +60,7 @@ const EntryPage:FC<Props> = ({ entry }) => {
                 <Card>
                     <CardHeader
                         title={`Entrada: ${inputValue}`} 
-                        subheader={`Creada hace ...Minutos`} 
+                        subheader={`Creada ${dateFunctions.getFormatDistanceToNow(entry.createdAt)}`} 
                     />
                     <CardContent>
                         <TextField 
