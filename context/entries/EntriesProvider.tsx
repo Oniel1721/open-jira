@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from 'react';
-import { v4 as uuidv4 } from 'uuid'
 import { entriesApi } from '../../apis';
 import { Entry, EntryStatus, FC } from '../../interfaces';
 import { EntriesContext, entriesReducer, ActionTypes } from './';
@@ -16,17 +15,14 @@ export const EntriesProvider:FC = ({ children }) => {
     const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE)
 
 
-    const addNewEntry = (description: string)=>{
-        const newEntry: Entry = {
-            _id: uuidv4(),
-            description,
-            createdAt: Date.now(),
-            status: EntryStatus.PENDING
-        }
+    const addNewEntry = async (description: string)=>{
+        const { data } = await entriesApi.post<Entry>('/entries', {
+            description
+        })
 
         dispatch({
             type: ActionTypes.Entries_AddEntry,
-            payload: newEntry
+            payload: data
         })
     }
 
