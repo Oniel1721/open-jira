@@ -50,13 +50,6 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>)=>{
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-
-    const { id } = req.query;
-
-    if(!mongoose.isValidObjectId(id)) {
-        return res.status(400).json({message: 'El id no es valido ' + id});
-    }
-
     switch(req.method){
         case 'GET':
             return getEntry(req , res)
