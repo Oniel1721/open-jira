@@ -14,8 +14,25 @@ const getEntries = async (res: NextApiResponse<Data>)=>{
     res.status(200).json(entries)
 }
 
-const postEntries = async (res: NextApiResponse<Data>)=>{
+const postEntry = async (req: NextApiRequest, res: NextApiResponse<Data>)=>{
+    const { description = '' } = req.body;
 
+    const newEntry = new Entry({
+        description,
+        createdAt: Date.now()
+    })
+
+    try {
+        await db.connect()
+        await newEntry.save();
+        await db.disconnect()
+        return res.status(201).json(newEntry)
+    }
+    catch(error){
+        await db.disconnect();
+        console.log(error)
+        return res.status(500).json({message: 'Algo salio mal, revisar consola del servidor'})
+    }   
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -24,7 +41,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
         case 'GET':
             return getEntries(res)
         case 'POST':
-            return postEntries(res)
+            return postEntry(req , res)
         default:
             return res.status(400).json({ message: 'Endpoint no existe' })
     }
