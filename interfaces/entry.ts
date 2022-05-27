@@ -6,9 +6,9 @@ export enum EntryStatus {
 }
 
 export const validEntryStatus:EntryStatus[] = [
-    EntryStatus.FINISHED, 
+    EntryStatus.PENDING,
     EntryStatus.IN_PROGRESS, 
-    EntryStatus.PENDING
+    EntryStatus.FINISHED
 ]
 
 
